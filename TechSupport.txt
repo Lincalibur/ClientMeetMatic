@@ -1,0 +1,37 @@
+Create and activate a virtual environment (optional but recommended):
+On Windows:
+• python -m venv venv
+venv\Scripts\activate
+
+On macOS/Linux:
+• python3 -m venv venv
+source venv/bin/activate
+
+Install the required packages:
+• pip install -r requirements.txt
+
+Step 4: Configure the Google Maps API Key
+
+Open the src/main.py file in a text editor.
+Replace 'YOUR_GOOGLE_MAPS_API_KEY' with your actual Google Maps API key:
+
+• API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'
+
+Save and close the file.
+
+Step 5: Run the Script
+
+Ensure you are in the project directory and the virtual environment is activated (if used).
+Run the script:
+
+• python src/main.py
+
+The script will read the client data from the Excel file, calculate distances, and schedule appointments in Outlook based on priority.
+Troubleshooting
+
+Python not recognized: Ensure Python is installed and added to your system's PATH.
+Google Maps API errors: Verify that your API key is correct and has the necessary permissions.
+Outlook issues: Ensure Outlook is installed and configured properly on your system.
+
+Support
+• For additional support, please contact lincalibur.gmail.com 
