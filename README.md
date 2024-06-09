@@ -15,7 +15,7 @@ This project calculates distances between clients using Google Maps and schedule
 ## Setup Instructions
 
 ### Step 1: Download and Extract the Project
-1. Download the project from the [GitHub repository](https://github.com/yourusername/ClientDistanceScheduler) (replace with your actual GitHub repository link).
+1. Download the project from the [GitHub repository](https://github.com/Lincalibur/ClientMeetMatic).
 2. Extract the downloaded ZIP file to a desired location on your computer.
 
 ### Step 2: Prepare the Excel File
