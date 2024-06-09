@@ -1,7 +1,7 @@
 import os
-from excel_handler import read_excel, add_priority, save_excel
-from distance_calculator import calculate_distance
-from scheduler.py import schedule_appointment
+from src.excel_handler import read_excel, add_priority, save_excel
+from src.distance_calculator import calculate_distance
+from src.scheduler import schedule_appointment
 
 EXCEL_FILE = 'data/clients.xlsx'
 API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY'
