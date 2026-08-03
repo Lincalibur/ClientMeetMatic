@@ -1,33 +1,80 @@
 # ClientMeetMatic
 
-This project calculates distances between clients using Google Maps and schedules appointments in Outlook based on distance and priority.
+A Windows/Outlook automation tool that turns a spreadsheet of clients into a real driving
+route: it looks up live distances and travel times between addresses with the Google Maps
+Distance Matrix API, orders visits by priority, and books back-to-back appointments directly
+in Outlook Calendar — spaced out to account for actual travel time between stops.
 
 ## Features
-- Calculate distances between client addresses using Google Maps.
-- Prioritize clients and schedule appointments in Outlook Calendar.
-- User-friendly setup with minimal interaction with the code.
+- Reads a client list from Excel (`ClientName`, `Address`, `Priority`).
+- Looks up real driving distance and duration between consecutive stops via the Google Maps
+  Distance Matrix API.
+- Visits clients in priority order (High → Medium → Low), starting from a fixed origin
+  (e.g. your office — the first row in the spreadsheet).
+- Books each appointment in Outlook Calendar with a 15-minute reminder, scheduled
+  back-to-back and spaced out by meeting length + travel time from the previous stop.
+- Clear error messages for the most common failure points: a missing/invalid API key, a
+  spreadsheet missing required columns or with bad Priority values, or Outlook not being
+  installed/running.
 
 ## Prerequisites
-1. **Python**: Ensure Python is installed on your system. You can download it from [python.org](https://www.python.org/downloads/).
-2. **Google Maps API Key**: Obtain an API key from the [Google Cloud Console](https://console.cloud.google.com/).
-3. **Microsoft Outlook**: Ensure Microsoft Outlook is installed and configured on your system.
+- **Windows** with **Microsoft Outlook** installed and configured (this project automates
+  Outlook via COM through `pywin32`, so it will not run on macOS/Linux).
+- **Python 3.9+**.
+- A **Google Maps API key** with the *Distance Matrix API* enabled — get one from the
+  [Google Cloud Console](https://console.cloud.google.com/google/maps-apis).
 
-## Setup Instructions
+## Setup
 
-### Step 1: Download and Extract the Project
-1. Download the project from the [GitHub repository](https://github.com/Lincalibur/ClientMeetMatic).
-2. Extract the downloaded ZIP file to a desired location on your computer.
-
-### Step 2: Prepare the Excel File
-1. Open the `clients.xlsx` file located in the `data` directory.
-2. Add your client information in the following format:
-   - **ClientName**: Name of the client.
-   - **Address**: Full address of the client.
-   - **Priority**: Priority of the client (e.g., High, Medium, Low).
-3. Save and close the Excel file.
-
-### Step 3: Install Required Packages
-1. Open a terminal or command prompt.
-2. Navigate to the project directory:
+1. Clone the repository and install dependencies:
    ```bash
-   cd path/to/ClientMeetMatic
+   git clone https://github.com/Lincalibur/ClientMeetMatic.git
+   cd ClientMeetMatic
+   pip install -r requirements.txt
+   ```
+
+2. Configure your API key:
+   ```bash
+   copy .env.example .env
+   ```
+   Then edit `.env` and set `GOOGLE_MAPS_API_KEY` to your real key. Never commit `.env`.
+
+3. Add your client data. Copy `Client List/Clients.sample.xlsx` to
+   `Client List/Clients.xlsx` (this path is gitignored, so your real data is never
+   committed) and fill in your own rows:
+   - **ClientName** — name of the client.
+   - **Address** — full address (used for the Google Maps lookup).
+   - **Priority** — `High`, `Medium`, or `Low`.
+
+   The **first row** is treated as your starting location (e.g. your office), not a client
+   to visit — see `Client List/Clients.sample.xlsx` for the expected format.
+
+4. Run it:
+   ```bash
+   python -m src.main
+   ```
+   This prints the planned route (distance/travel time from the previous stop, and the
+   scheduled start time for each visit) and creates the corresponding appointments in your
+   default Outlook calendar, starting the next day at 9:00 AM.
+
+## Running the tests
+
+The Google Maps and Outlook calls are mocked in the test suite, so tests run without a real
+API key or Outlook installation:
+```bash
+pip install -r requirements.txt
+pytest
+```
+
+## Troubleshooting
+- **"No Google Maps API key configured"** — make sure `.env` exists (copied from
+  `.env.example`) and `GOOGLE_MAPS_API_KEY` is set to a real key.
+- **"Could not create the appointment in Outlook..."** — Outlook must be installed,
+  configured with a mail profile, and (ideally) already running.
+- **"missing required column(s)"** — your Excel file must have `ClientName`, `Address`,
+  and `Priority` columns exactly as named.
+
+## Known limitations
+- Scheduling doesn't account for business hours/lunch breaks beyond a fixed 9:00 AM start
+  — long routes can run into the evening.
+- Only driving distance/duration is supported (no walking/transit modes).
