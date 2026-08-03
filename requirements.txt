@@ -2,3 +2,5 @@ pandas
 openpyxl
 googlemaps
 pywin32
+python-dotenv
+pytest
