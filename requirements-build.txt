@@ -1,0 +1,2 @@
+# Only needed to build the standalone .exe (pip install -r requirements.txt -r requirements-build.txt)
+pyinstaller

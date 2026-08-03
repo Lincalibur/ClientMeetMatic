@@ -12,6 +12,12 @@ Client List/Clients.xlsx
 # Virtual environment
 venv/
 .venv/
+.venv-build/
 
 # Pytest cache
 .pytest_cache/
+
+# PyInstaller build output
+build/
+dist/
+*.spec.bak
